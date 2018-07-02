@@ -3,7 +3,7 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
-
+const bodyParser = require('body-parser')
 const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
 // const {dbConnect} = require('./db-knex');
@@ -21,6 +21,8 @@ app.use(
     origin: CLIENT_ORIGIN
   })
 );
+
+app.use(bodyParser.json());
 
 app.get('/api/cheeses',( req, res, next) => {
   const testing = [
@@ -45,6 +47,19 @@ app.get('/api/cheeses',( req, res, next) => {
   res.json(testing);
 });
 
+let titlesList = [];
+
+app.post('/api/created',( req, res, next) => {
+  
+  titlesList.push(req.body);
+  console.log(req.body);
+
+  res.json(titlesList);
+});
+
+app.get('/api/created', (req,res,next)=>{
+  res.json(titlesList);
+});
 
 function runServer(port = PORT) {
   const server = app
