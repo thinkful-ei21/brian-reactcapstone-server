@@ -3,11 +3,14 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
-const bodyParser = require('body-parser')
+const mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+
+const bodyParser = require('body-parser');
 const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
 // const {dbConnect} = require('./db-knex');
-
+const lyricsRouter = require('./routes');
 const app = express();
 
 app.use(
@@ -23,43 +26,30 @@ app.use(
 );
 
 app.use(bodyParser.json());
+app.use('/',lyricsRouter);
+// app.get('/api/cheeses',( req, res, next) => {
+//   const testing = [
+//     'Bath Blue',
+//     'Barkham Blue',
+//     'Buxton Blue',
+//     'Cheshire Blue',
+//     'Devon Blue',
+//     'Dorset Blue Vinney',
+//     'Dovedale',
+//     'Exmoor Blue',
+//     'Harbourne Blue',
+//     'Lanark Blue',
+//     'Lymeswold',
+//     'Oxford Blue',
+//     'Shropshire Blue',
+//     'Stichelton',
+//     'Stilton',
+//     'Blue Wensleydale',
+//     'Yorkshire Blue'
+//   ];
+//   res.json(testing);
+// });
 
-app.get('/api/cheeses',( req, res, next) => {
-  const testing = [
-    'Bath Blue',
-    'Barkham Blue',
-    'Buxton Blue',
-    'Cheshire Blue',
-    'Devon Blue',
-    'Dorset Blue Vinney',
-    'Dovedale',
-    'Exmoor Blue',
-    'Harbourne Blue',
-    'Lanark Blue',
-    'Lymeswold',
-    'Oxford Blue',
-    'Shropshire Blue',
-    'Stichelton',
-    'Stilton',
-    'Blue Wensleydale',
-    'Yorkshire Blue'
-  ];
-  res.json(testing);
-});
-
-let titlesList = [];
-
-app.post('/api/created',( req, res, next) => {
-  
-  titlesList.push(req.body);
-  console.log(req.body);
-
-  res.json(titlesList);
-});
-
-app.get('/api/created', (req,res,next)=>{
-  res.json(titlesList);
-});
 
 function runServer(port = PORT) {
   const server = app
