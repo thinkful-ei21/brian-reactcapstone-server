@@ -5,23 +5,59 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 
-const lyric = require('./models/lyrics');
+const Lyric = require('./models/lyrics');
 
 
-let titlesList = [];
 
-router.post('/api/created',( req, res, next) => {
+
+router.post('/',( req, res, next) => {
+  const { artist, title, lyrics } = req.body;
+  const newSong = {artist, title, lyrics};
   
   
-
-  titlesList.push(req.body);
-  console.log(req.body);
   
-  res.json(titlesList);
+  Lyric.create(newSong)
+    .then(item => {
+      if (item) {
+        res.location(`${req.originalUrl}`).status(201).json(item);
+      }
+    }).catch(err => {
+      next(err);
+    });
+
+  
 });
   
-router.get('/api/created', (req,res,next)=>{
-  res.json(titlesList);
+router.get('/', (req,res) => {
+  console.log(res);
+  Lyric.find()
+    .exec()
+    .then(lyrics => {
+      res.json({
+        lyrics: lyrics.map( lyric => lyric.apiRepr())
+      }); 
+    })
+
+    .catch(err => { console.log(err); 
+      return res.status(500).json({message: 'Internal server error'}); 
+    }); 
 });
+
+
+        
+    
+
+
+// res.json(titlesList);
+
+
 
 module.exports = router;
+
+router.get('/', (req, res) => {
+  Lyric.find() 
+    .exec() 
+    .then(characters => {
+      res.json({ 
+        characters: characters.map( character => character.apiRepr() ) }); }) 
+    .catch(err => { console.log(err); return res.status(500).json({message: 'Internal server error'}); }); });

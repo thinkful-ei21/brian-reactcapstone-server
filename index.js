@@ -26,7 +26,7 @@ app.use(
 );
 
 app.use(bodyParser.json());
-app.use('/',lyricsRouter);
+app.use('/api/created',lyricsRouter);
 // app.get('/api/cheeses',( req, res, next) => {
 //   const testing = [
 //     'Bath Blue',

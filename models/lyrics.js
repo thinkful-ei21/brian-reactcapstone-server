@@ -17,5 +17,13 @@ lyricSchema.set('toObject', {
   }
 });
   
+lyricSchema.methods.apiRepr = function() {
+    return {
+      
+      artist: this.artist,
+      title: this.title,
+      lyrics: this.lyrics
+    };
+  }
 
 module.exports = mongoose.model('lyric', lyricSchema);
