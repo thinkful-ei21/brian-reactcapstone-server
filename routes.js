@@ -43,10 +43,31 @@ router.get('/', (req,res) => {
     }); 
 });
 
+//DELETE ROUTE AND PUT ROUTE
+router.delete('/:id', (req,res,next) => {
+  const id = req.params.id;
 
-        
-    
+  Lyric.findOneAndRemove(id)
+    .then(() => {
+      res.sendStatus(204);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
 
+//    CONTINUE HERE 
+router.put('/:id', (req, res, next) => {
+  const { id } = req.params;
+
+  Lyric.findByIdAndUpdate(id)
+    .then(() => {
+      res.sendStatus(204);
+    })
+    .catch(err => {
+      next(err);
+    });
+});
 
 // res.json(titlesList);
 

@@ -6,7 +6,7 @@ const lyricSchema = new mongoose.Schema({
   artist: String, required: false,
   title: { type: String, required: true },
   lyrics: String,
-
+  notes: String
 });
 
 lyricSchema.set('toObject', {
@@ -18,12 +18,13 @@ lyricSchema.set('toObject', {
 });
   
 lyricSchema.methods.apiRepr = function() {
-    return {
+  return {
       
-      artist: this.artist,
-      title: this.title,
-      lyrics: this.lyrics
-    };
-  }
+    artist: this.artist,
+    title: this.title,
+    lyrics: this.lyrics,
+    notes: this.notes
+  };
+};
 
 module.exports = mongoose.model('lyric', lyricSchema);
