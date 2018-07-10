@@ -19,7 +19,7 @@ lyricSchema.set('toObject', {
   
 lyricSchema.methods.apiRepr = function() {
   return {
-      
+      id: this._id,
     artist: this.artist,
     title: this.title,
     lyrics: this.lyrics,

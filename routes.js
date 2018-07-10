@@ -75,10 +75,10 @@ router.put('/:id', (req, res, next) => {
 
 module.exports = router;
 
-router.get('/', (req, res) => {
-  Lyric.find() 
-    .exec() 
-    .then(characters => {
-      res.json({ 
-        characters: characters.map( character => character.apiRepr() ) }); }) 
-    .catch(err => { console.log(err); return res.status(500).json({message: 'Internal server error'}); }); });
+// router.get('/', (req, res) => {
+//   Lyric.find() 
+//     .exec() 
+//     .then(characters => {
+//       res.json({ 
+//         characters: characters.map( character => character.apiRepr() ) }); }) 
+//     .catch(err => { console.log(err); return res.status(500).json({message: 'Internal server error'}); }); });
