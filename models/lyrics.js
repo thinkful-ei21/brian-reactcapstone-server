@@ -2,12 +2,17 @@
 
 const mongoose = require('mongoose');
 
+
 const lyricSchema = new mongoose.Schema({
   artist: String, required: false,
-  title: { type: String, required: true },
+  title: { type: String },
   lyrics: String,
-  notes: String
+  notes: String,
+  comments:[{highlight: String,
+    remark: String}]
 });
+
+lyricSchema.set('timestamps', true);
 
 lyricSchema.set('toObject', {
   virtuals: true,     // include built-in virtual `id`
@@ -19,12 +24,16 @@ lyricSchema.set('toObject', {
   
 lyricSchema.methods.apiRepr = function() {
   return {
-      id: this._id,
+    id: this._id,
     artist: this.artist,
     title: this.title,
     lyrics: this.lyrics,
-    notes: this.notes
+    notes: this.notes,
+    highlight: this.highlight,
+    remark: this.remark
   };
 };
+
+
 
 module.exports = mongoose.model('lyric', lyricSchema);

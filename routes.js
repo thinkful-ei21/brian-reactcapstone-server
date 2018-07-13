@@ -11,6 +11,7 @@ const Lyric = require('./models/lyrics');
 
 
 router.post('/',( req, res, next) => {
+  console.log(req.body);
   const { artist, title, lyrics } = req.body;
   const newSong = {artist, title, lyrics};
   
@@ -27,10 +28,33 @@ router.post('/',( req, res, next) => {
 
   
 });
+router.post('/:id/comments',( req, res, next) => {
+  const {  remark, highlight } = req.body;
+  const newComments = { remark, highlight};
+  const lyricid = req.params.id;
+  
+
+  console.log(newComments,lyricid);
+  Lyric.update(
+    {_id: lyricid},
+    { $push: {comments: newComments}}
+  )
+    .then(item => {
+      if (item) {
+        res.location(`${req.originalUrl}`).status(201).json(item);
+      }
+    }).catch(err => {
+      next(err);
+    });
+
+  
+});
   
 router.get('/', (req,res) => {
   console.log(res);
+
   Lyric.find()
+    //.sort({createdAt:'title'})
     .exec()
     .then(lyrics => {
       res.json({
@@ -42,6 +66,22 @@ router.get('/', (req,res) => {
       return res.status(500).json({message: 'Internal server error'}); 
     }); 
 });
+/////add base 
+router.get('/:id/comments', (req,res) => {
+  console.log(res);
+  let id = req.params.id;
+  Lyric.findById(id)
+    .exec()
+    .then(lyrics => {
+      res.json(lyrics.comments);
+    })
+
+    .catch(err => { console.log(err); 
+      return res.status(500).json({message: 'Internal server error'}); 
+    }); 
+});
+
+
 
 //DELETE ROUTE AND PUT ROUTE
 router.delete('/:id', (req,res,next) => {
