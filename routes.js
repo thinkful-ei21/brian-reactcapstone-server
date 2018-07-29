@@ -14,9 +14,9 @@ router.post('/',( req, res, next) => {
   console.log(req.body);
   const { artist, title, lyrics } = req.body;
   const newSong = {artist, title, lyrics};
-  
-  
-  
+
+
+
   Lyric.create(newSong)
     .then(item => {
       if (item) {
@@ -26,13 +26,13 @@ router.post('/',( req, res, next) => {
       next(err);
     });
 
-  
+
 });
 router.post('/:id/comments',( req, res, next) => {
   const {  remark, highlight } = req.body;
   const newComments = { remark, highlight};
   const lyricid = req.params.id;
-  
+
 
   console.log(newComments,lyricid);
   Lyric.update(
@@ -47,9 +47,9 @@ router.post('/:id/comments',( req, res, next) => {
       next(err);
     });
 
-  
+
 });
-  
+
 router.get('/', (req,res) => {
   console.log(res);
 
@@ -59,14 +59,14 @@ router.get('/', (req,res) => {
     .then(lyrics => {
       res.json({
         lyrics: lyrics.map( lyric => lyric.apiRepr())
-      }); 
+      });
     })
 
-    .catch(err => { console.log(err); 
-      return res.status(500).json({message: 'Internal server error'}); 
-    }); 
+    .catch(err => { console.log(err);
+      return res.status(500).json({message: 'Internal server error'});
+    });
 });
-/////add base 
+/////add base
 router.get('/:id/comments', (req,res) => {
   console.log(res);
   let id = req.params.id;
@@ -76,9 +76,9 @@ router.get('/:id/comments', (req,res) => {
       res.json(lyrics.comments);
     })
 
-    .catch(err => { console.log(err); 
-      return res.status(500).json({message: 'Internal server error'}); 
-    }); 
+    .catch(err => { console.log(err);
+      return res.status(500).json({message: 'Internal server error'});
+    });
 });
 
 
@@ -96,7 +96,7 @@ router.delete('/:id', (req,res,next) => {
     });
 });
 
-//    CONTINUE HERE 
+//    CONTINUE HERE
 router.put('/:id', (req, res, next) => {
   const { id } = req.params;
 
@@ -116,9 +116,9 @@ router.put('/:id', (req, res, next) => {
 module.exports = router;
 
 // router.get('/', (req, res) => {
-//   Lyric.find() 
-//     .exec() 
+//   Lyric.find()
+//     .exec()
 //     .then(characters => {
-//       res.json({ 
-//         characters: characters.map( character => character.apiRepr() ) }); }) 
+//       res.json({
+//         characters: characters.map( character => character.apiRepr() ) }); })
 //     .catch(err => { console.log(err); return res.status(500).json({message: 'Internal server error'}); }); });

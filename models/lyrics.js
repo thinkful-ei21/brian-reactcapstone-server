@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 
-
+///feature comment is changing model from highlight to position
 const lyricSchema = new mongoose.Schema({
   artist: String, required: false,
   title: { type: String },
@@ -21,7 +21,7 @@ lyricSchema.set('toObject', {
     delete ret._id; // delete `_id`
   }
 });
-  
+
 lyricSchema.methods.apiRepr = function() {
   return {
     id: this._id,
@@ -29,8 +29,7 @@ lyricSchema.methods.apiRepr = function() {
     title: this.title,
     lyrics: this.lyrics,
     notes: this.notes,
-    highlight: this.highlight,
-    remark: this.remark
+
   };
 };
 

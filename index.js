@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const passport = require('passport');
 mongoose.Promise = global.Promise;
 
 const bodyParser = require('body-parser');
@@ -11,6 +12,8 @@ const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
 // const {dbConnect} = require('./db-knex');
 const lyricsRouter = require('./routes');
+const { router: usersRouter } = require('./users');
+const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 const app = express();
 
 app.use(
@@ -18,15 +21,41 @@ app.use(
     skip: (req, res) => process.env.NODE_ENV === 'test'
   })
 );
-
+////CORS STUFF
 app.use(
   cors({
     origin: CLIENT_ORIGIN
   })
 );
 
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE');
+  if (req.method === 'OPTIONS') {
+    return res.send(204);
+  }
+  next();
+});
+passport.use(localStrategy);
+passport.use(jwtStrategy);
+
+app.use('/api/users/', usersRouter);
+app.use('/api/auth/', authRouter);
 app.use(bodyParser.json());
 app.use('/api/created',lyricsRouter);
+
+const jwtAuth = passport.authenticate('jwt', { session: false });
+
+app.get('/api/protected', jwtAuth, (req, res) => {
+  return res.json({
+    data: 'rosebud'
+  });
+});
+
+app.use('*', (req, res) => {
+  return res.status(404).json({ message: 'Not Found' });
+});
 // app.get('/api/cheeses',( req, res, next) => {
 //   const testing = [
 //     'Bath Blue',
@@ -69,4 +98,4 @@ if (require.main === module) {
 
 
 
-module.exports = { app };
+module.exports = { app, runServer };
